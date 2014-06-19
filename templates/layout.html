@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Farebox Recovery</title>  
+    <!--<script src="\static\Chart.min.js"></script>-->   
+    <style>
+
+		.bar {
+		  fill: steelblue;
+		}
+
+		.bar:hover {
+		  fill: brown;
+		}
+
+		.axis {
+		  font: 10px sans-serif;
+		}
+
+		.axis path,
+		.axis line {
+		  fill: none;
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
+
+		.x.axis path {
+		  display: none;
+		}
+
+</style>
+  </head>
+  <body>
+	<script type="text/javascript" src="{{ url_for('static', filename='d3.v3.min.js') }}"></script>
+ 
+      {% block content %}
+      {% endblock %}
+    
+     
+  </body>
+</html>

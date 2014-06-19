@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<div class="container">
+
+	<div id="results">
+		<b>Line</b>: {{line}}
+		<b>Direction</b>: {{direction}}
+		<b>Fare zones</b>: {{zones}}<br>
+	</div>
+</div>
+<!--
+<canvas id="farecost" width="600" height="550"></canvas>
+		<script>
+	    var farecostData = {
+				labels : {{zones}},
+				datasets : [
+					{
+						fillColor : "rgba(172,194,132,0.4)",
+						strokeColor : "#ACC26D",
+						data : {{fare}}
+					},
+					{
+						fillColor : "rgba(151,187,205,0.5)",
+						strokeColor : "rgba(151,187,205,0.5)",
+						data : {{cost}}
+					}
+				]
+			}
+	    var farecost = document.getElementById('farecost').getContext('2d');
+	    new Chart(farecost).Bar(farecostData, {
+	    	//scaleOverride : true,
+			//scaleSteps : 45,
+			//scaleStepWidth : 500,
+			//scaleStartValue : 0
+	    });
+</script>
+Farezones
+
+
+<canvas id="recovery" width="600" height="550"></canvas>
+		<script>
+	    var recoveryData = {
+				labels : {{zones}},
+				datasets : [
+					{
+						fillColor : "rgba(172,1,132,0.4)",
+						strokeColor : "#ACC26D",
+						data : {{recovery}}
+					}
+
+				]
+			}
+	    var recovery = document.getElementById('recovery').getContext('2d');
+	    new Chart(recovery).Bar(recoveryData, {
+			scaleOverride : true,
+			scaleSteps : 36,
+			scaleStepWidth : 5,
+			scaleStartValue : 0,
+			barValueSpacing : 50
+		});
+  </script>
+-->
+<!--Farezones-->
+<script>
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10, "%");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("data.csv", type, function(error, data) {
+  x.domain(data.map(function(d) { return d.zone; }));
+  y.domain([0, d3.max(data, function(d) { return d.dollars; })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+      .append("text")
+      .attr("x", 915)
+      .attr("dy", "1em")
+      .style("text-anchor", "end")
+      .text("Farezones");;
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Dollars");
+
+  svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.zone); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.dollars); })
+      .attr("height", function(d) { return height - y(d.dollars); });
+
+});
+
+function type(d) {
+  d.dollars = +d.dollars;
+  return d;
+}
+
+</script>
+<br>
+<img src="static\Line5Zone1test.jpg" alt="zones map">
+
+  
+{% endblock %}
